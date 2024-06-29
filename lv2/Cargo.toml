@@ -1,0 +1,13 @@
+[package]
+name = "dm_sd1"
+version = "0.1.0"
+authors = ["davemollen <davemollen@gmail.com>"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+lv2 = { version = "0.6.0", features = ["minimal_plugin"] }
+sd1 = { path = "../sd1" }
+
+[lib]
+crate-type = ["cdylib"]
