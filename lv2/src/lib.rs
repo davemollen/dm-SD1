@@ -39,7 +39,7 @@ impl Plugin for DmSD1 {
   fn run(&mut self, ports: &mut Ports, _features: &mut (), _sample_count: u32) {
     let drive = *ports.drive;
     let tone = self.sd1.apply_s_taper_curve(*ports.tone);
-    let level = *ports.level;
+    let level = *ports.level * 0.5;
 
     if !self.is_active {
       self.sd1.initialize_params(drive, tone, level);

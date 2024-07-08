@@ -14,7 +14,7 @@ impl DmSD1 {
   pub fn get_params(&self) -> (f32, f32, f32) {
     let drive = self.params.drive.value();
     let tone = self.params.tone.value();
-    let level = self.params.level.value();
+    let level = self.params.level.value() * 0.5;
 
     (drive, self.sd1.apply_s_taper_curve(tone), level)
   }
