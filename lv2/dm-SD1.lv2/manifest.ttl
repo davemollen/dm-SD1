@@ -5,3 +5,4 @@
     a lv2:Plugin ;
     lv2:binary <libdm_sd1.so> ;
     rdfs:seeAlso <dm-SD1.ttl>  .
+<https://github.com/davemollen/dm-SD1> rdfs:seeAlso <modgui.ttl> .
