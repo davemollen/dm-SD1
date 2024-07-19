@@ -1,3 +1,4 @@
+#![feature(portable_simd)]
 mod clipper;
 mod tone;
 mod shared {
@@ -46,7 +47,7 @@ impl SD1 {
     let (drive, tone, level) = self.smooth_parameters.process(drive, tone, level);
     let highpass_output = input - self.one_pole_filter.process(input);
     let op_amp_output = self.op_amp.process(highpass_output, drive);
-    let clip_output = self.clipper.process(op_amp_output) * 0.5 + input;
+    let clip_output = self.clipper.process(op_amp_output);
     let tone_output = self.tone.process(clip_output, tone);
 
     tone_output * level
