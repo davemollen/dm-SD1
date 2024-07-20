@@ -30,7 +30,7 @@ impl Clipper {
     } else {
       downsampled
     };
-    asymmetrical * 0.630305 // gain is 1.260601 * 0.5 = 1.260601
+    asymmetrical * 0.630305 // 1.260601 * 0.5
   }
 
   fn clip(x: f32x8) -> f32x8 {

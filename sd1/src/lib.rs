@@ -32,11 +32,12 @@ impl SD1 {
     }
   }
 
-  pub fn apply_s_taper_curve(&self, input: f32) -> f32 {
-    let inv_input = 1. - input;
-    let squared_input = input * input;
-    let squared_inv_input = inv_input * inv_input;
-    (1. - squared_inv_input * squared_inv_input) * 0.5 + squared_input * squared_input * 0.5
+  pub fn map_params(&self, drive: f32, tone: f32, level: f32) -> (f32, f32, f32) {
+    (
+      self.apply_log_curve(drive),
+      self.apply_s_taper_curve(tone),
+      self.apply_log_curve(level) * 0.5,
+    )
   }
 
   pub fn initialize_params(&mut self, drive: f32, tone: f32, level: f32) {
@@ -51,5 +52,16 @@ impl SD1 {
     let tone_output = self.tone.process(clip_output, tone);
 
     tone_output * level
+  }
+
+  fn apply_s_taper_curve(&self, input: f32) -> f32 {
+    let inv_input = 1. - input;
+    let squared_input = input * input;
+    let squared_inv_input = inv_input * inv_input;
+    (1. - squared_inv_input * squared_inv_input) * 0.5 + squared_input * squared_input * 0.5
+  }
+
+  fn apply_log_curve(&self, input: f32) -> f32 {
+    input * input * input
   }
 }

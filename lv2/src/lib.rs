@@ -37,9 +37,7 @@ impl Plugin for DmSD1 {
   // Process a chunk of audio. The audio ports are dereferenced to slices, which the plugin
   // iterates over.
   fn run(&mut self, ports: &mut Ports, _features: &mut (), _sample_count: u32) {
-    let drive = *ports.drive;
-    let tone = self.sd1.apply_s_taper_curve(*ports.tone);
-    let level = *ports.level * 0.5;
+    let (drive, tone, level) = self.sd1.map_params(*ports.drive, *ports.tone, *ports.level);
 
     if !self.is_active {
       self.sd1.initialize_params(drive, tone, level);
