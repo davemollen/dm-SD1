@@ -15,16 +15,11 @@ def generate_s_domain_coefficients(drive):
   r1 = 4700.
   c1 = 4.7e-8
   r2 = drive * 1000000 + 33000
-  c2 = 1e-10
 
-  r1c1 = r1 * c1
-  r2c2 = r2 * c2
-
-  a0 = r1c1 * r2c2
-  a1 = r1c1 + r2c2
+  a1 = r1 * c1
   b1 = r2 * c1 + a1
 
-  return ([a0, b1, 1.], [a0, a1, 1.])
+  return ([0., b1, 1.], [0., a1, 1.])
 
 # Get generated s-domain coefficients
 num, den = generate_s_domain_coefficients(drive)
