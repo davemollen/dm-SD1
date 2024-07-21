@@ -62,6 +62,6 @@ impl SD1 {
   }
 
   fn apply_log_curve(&self, input: f32) -> f32 {
-    input * input * input
+    input * input
   }
 }
