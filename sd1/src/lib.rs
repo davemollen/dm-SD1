@@ -36,7 +36,7 @@ impl SD1 {
     (
       self.apply_log_curve(drive),
       self.apply_s_taper_curve(tone),
-      self.apply_log_curve(level) * 0.5,
+      self.apply_log_curve(level),
     )
   }
 
