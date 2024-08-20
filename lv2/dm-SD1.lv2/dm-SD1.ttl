@@ -17,7 +17,9 @@
 	mod:brand "DM" ;
 	mod:label "SD1" ;
 	rdfs:comment """
-An overdrive effect written in Rust.
+An overdrive effect modeled after the Boss SD-1(*).
+
+(*) 'Boss SD-1 is a trademark or trade name of another manufacturer and was used merely to identify the product whose sound was reviewed in the creation of this product. All other trademarks are the property of their respective holders.'
 """ ;
 	lv2:requiredFeature lv2:inPlaceBroken ;
 	lv2:optionalFeature lv2:hardRTCapable ;
