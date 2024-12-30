@@ -1,5 +1,5 @@
 use nih_plug::prelude::*;
-use sd1::SD1;
+use sd1::{Params as ProcessParams, SD1};
 use std::sync::Arc;
 mod sd1_parameters;
 use sd1_parameters::SD1Parameters;
@@ -8,16 +8,7 @@ mod editor;
 struct DmSD1 {
   params: Arc<SD1Parameters>,
   sd1: SD1,
-}
-
-impl DmSD1 {
-  pub fn get_params(&self) -> (f32, f32, f32) {
-    let drive = self.params.drive.value();
-    let tone = self.params.tone.value();
-    let level = self.params.level.value();
-
-    self.sd1.map_params(drive, tone, level)
-  }
+  process_params: ProcessParams,
 }
 
 impl Default for DmSD1 {
@@ -26,6 +17,7 @@ impl Default for DmSD1 {
     Self {
       params: params.clone(),
       sd1: SD1::new(44100.),
+      process_params: ProcessParams::new(44100.),
     }
   }
 }
@@ -66,8 +58,7 @@ impl Plugin for DmSD1 {
     _context: &mut impl InitContext<Self>,
   ) -> bool {
     self.sd1 = SD1::new(buffer_config.sample_rate);
-    let (drive, tone, level) = self.get_params();
-    self.sd1.initialize_params(drive, tone, level);
+    self.process_params = ProcessParams::new(buffer_config.sample_rate);
     true
   }
 
@@ -77,11 +68,15 @@ impl Plugin for DmSD1 {
     _aux: &mut AuxiliaryBuffers,
     _context: &mut impl ProcessContext<Self>,
   ) -> ProcessStatus {
-    let (drive, tone, level) = self.get_params();
+    self.process_params.set(
+      self.params.drive.value(),
+      self.params.tone.value(),
+      self.params.level.value(),
+    );
 
     buffer.iter_samples().for_each(|mut channel_samples| {
       let sample = channel_samples.iter_mut().next().unwrap();
-      *sample = self.sd1.process(*sample, drive, tone, level);
+      *sample = self.sd1.process(*sample, &mut self.process_params);
     });
     ProcessStatus::Normal
   }
