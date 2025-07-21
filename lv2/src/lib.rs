@@ -5,11 +5,11 @@ use sd1::{Params, SD1};
 
 #[derive(PortCollection)]
 struct Ports {
-  drive: InputPort<Control>,
-  tone: InputPort<Control>,
-  level: InputPort<Control>,
-  input: InputPort<Audio>,
-  output: OutputPort<Audio>,
+  drive: InputPort<InPlaceControl>,
+  tone: InputPort<InPlaceControl>,
+  level: InputPort<InPlaceControl>,
+  input: InputPort<InPlaceAudio>,
+  output: OutputPort<InPlaceAudio>,
 }
 
 #[uri("https://github.com/davemollen/dm-SD1")]
@@ -39,10 +39,13 @@ impl Plugin for DmSD1 {
   // Process a chunk of audio. The audio ports are dereferenced to slices, which the plugin
   // iterates over.
   fn run(&mut self, ports: &mut Ports, _features: &mut (), _sample_count: u32) {
-    self.params.set(*ports.drive, *ports.tone, *ports.level);
+    self
+      .params
+      .set(ports.drive.get(), ports.tone.get(), ports.level.get());
 
-    for (input, output) in ports.input.iter().zip(ports.output.iter_mut()) {
-      *output = self.sd1.process(*input, &mut self.params);
+    for (input, output) in ports.input.iter().zip(ports.output.iter()) {
+      let sd1_output = self.sd1.process(input.get(), &mut self.params);
+      output.set(sd1_output);
     }
   }
 }
