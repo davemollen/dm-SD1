@@ -1,4 +1,5 @@
 #![feature(portable_simd)]
+mod bypass;
 mod clipper;
 mod one_pole_filter;
 mod params;
@@ -9,7 +10,7 @@ mod shared {
   pub mod float_ext;
 }
 mod op_amp;
-pub use params::Params;
+pub use {bypass::Bypass, params::Params};
 use {
   clipper::Clipper, one_pole_filter::OnePoleFilter, op_amp::OpAmp, params::Smoother, tone::Tone,
 };
