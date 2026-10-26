@@ -1,17 +1,17 @@
 #![feature(portable_simd)]
 mod clipper;
+mod one_pole_filter;
 mod params;
 mod tone;
 mod shared {
+  pub mod bilinear_transform;
+  pub mod biquad_filter;
   pub mod float_ext;
-  pub mod non_inverting_op_amp;
-  pub mod one_pole_filter;
 }
 mod op_amp;
 pub use params::Params;
 use {
-  clipper::Clipper, op_amp::OpAmp, params::Smoother, shared::one_pole_filter::OnePoleFilter,
-  tone::Tone,
+  clipper::Clipper, one_pole_filter::OnePoleFilter, op_amp::OpAmp, params::Smoother, tone::Tone,
 };
 
 pub struct SD1 {
@@ -29,6 +29,13 @@ impl SD1 {
       clipper: Clipper::new(),
       tone: Tone::new(sample_rate),
     }
+  }
+
+  pub fn reset(&mut self) {
+    self.one_pole_filter.reset();
+    self.op_amp.reset();
+    self.clipper.reset();
+    self.tone.reset();
   }
 
   pub fn process(&mut self, input: f32, params: &mut Params) -> f32 {

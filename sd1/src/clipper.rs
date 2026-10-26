@@ -17,6 +17,11 @@ impl Clipper {
     }
   }
 
+  pub fn reset(&mut self) {
+    self.upsample_fir.reset();
+    self.downsample_fir.reset();
+  }
+
   pub fn process(&mut self, input: f32) -> f32 {
     let offset = (input - input.abs() * 0.375) * 1.25;
 

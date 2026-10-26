@@ -4,7 +4,11 @@ pub struct BiquadFilter {
 
 impl BiquadFilter {
   pub fn new() -> Self {
-    Self { z: [0.0; 2] }
+    Self { z: [0.; 2] }
+  }
+
+  pub fn reset(&mut self) {
+    self.z = [0.; 2];
   }
 
   pub fn process(&mut self, x: f32, (b, a): ([f32; 3], [f32; 3])) -> f32 {

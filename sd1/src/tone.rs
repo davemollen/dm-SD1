@@ -1,4 +1,4 @@
-use crate::shared::non_inverting_op_amp::NonInvertingOpAmp;
+use crate::shared::{bilinear_transform::BilinearTransform, biquad_filter::BiquadFilter};
 
 const CS: f32 = 0.22e-6;
 const RS: f32 = 1e3;
@@ -8,7 +8,8 @@ const RZ: f32 = 220.0;
 const RF: f32 = 1e3;
 
 pub struct Tone {
-  non_inverting_op_amp: NonInvertingOpAmp,
+  op_amp: BiquadFilter,
+  bilinear_transform: BilinearTransform,
 }
 
 impl Tone {
@@ -16,15 +17,19 @@ impl Tone {
 
   pub fn new(sample_rate: f32) -> Self {
     Self {
-      non_inverting_op_amp: NonInvertingOpAmp::new(sample_rate),
+      op_amp: BiquadFilter::new(),
+      bilinear_transform: BilinearTransform::new(sample_rate),
     }
+  }
+
+  pub fn reset(&mut self) {
+    self.op_amp.reset();
   }
 
   pub fn process(&mut self, input: f32, tone: f32) -> f32 {
     let s_domain_coefficients = Self::get_s_domain_coefficients(tone);
-    self
-      .non_inverting_op_amp
-      .process(input, s_domain_coefficients)
+    let z_domain_coefficients = self.bilinear_transform.process(s_domain_coefficients);
+    self.op_amp.process(input, z_domain_coefficients)
   }
 
   fn get_s_domain_coefficients(tone: f32) -> ([f32; 3], [f32; 3]) {

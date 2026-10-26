@@ -19,6 +19,10 @@ impl Params {
     }
   }
 
+  pub fn reset(&mut self) {
+    self.is_initialized = false;
+  }
+
   pub fn set(&mut self, drive: f32, tone: f32, level: f32) {
     let drive = Self::apply_log_curve(drive);
     let tone = Self::apply_s_taper_curve(tone);
